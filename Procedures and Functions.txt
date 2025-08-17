@@ -1,0 +1,57 @@
+-- Task 8: Stored Procedures and Functions
+-- Objective: Learn reusable SQL blocks using procedures and functions
+
+-- Create a sample database (optional)
+CREATE DATABASE IF NOT EXISTS Task8DB;
+USE Task8DB;
+
+-- Create a sample table
+CREATE TABLE Employees (
+    EmpID INT AUTO_INCREMENT PRIMARY KEY,
+    EmpName VARCHAR(100),
+    Department VARCHAR(50),
+    Salary DECIMAL(10,2)
+);
+
+-- Insert sample data
+INSERT INTO Employees (EmpName, Department, Salary) VALUES
+('John Doe', 'HR', 40000),
+('Jane Smith', 'IT', 60000),
+('Michael Johnson', 'Finance', 55000),
+('Emily Davis', 'IT', 70000);
+
+-- =========================================
+-- STORED PROCEDURE
+-- =========================================
+-- Procedure to get employees by department
+DELIMITER //
+CREATE PROCEDURE GetEmployeesByDept(IN deptName VARCHAR(50))
+BEGIN
+    SELECT EmpName, Salary
+    FROM Employees
+    WHERE Department = deptName;
+END //
+DELIMITER ;
+
+-- =========================================
+-- FUNCTION
+-- =========================================
+-- Function to calculate annual salary
+DELIMITER //
+CREATE FUNCTION AnnualSalary(monthlySalary DECIMAL(10,2))
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    RETURN monthlySalary * 12;
+END //
+DELIMITER ;
+
+-- =========================================
+-- EXECUTION EXAMPLES
+-- =========================================
+-- Call procedure
+CALL GetEmployeesByDept('IT');
+
+-- Use function
+SELECT EmpName, AnnualSalary(Salary) AS Annual_Salary
+FROM Employees;
